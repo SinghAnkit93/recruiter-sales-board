@@ -28,3 +28,10 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Pipeline stages, priorities, sources and money/follow-up rules live in `src/lib/pipeline.ts` as pure functions with tests in `src/lib/pipeline.test.ts` — keep business rules out of components so they stay testable.
+- Board data is read/written from the browser with the generated Supabase client under RLS (team-shared: any signed-in user can read/write deals and activities); query/mutation hooks live in `src/lib/deals-api.ts`.
+- Signed-in pages live under `src/routes/_authenticated/` (client-only `beforeLoad` gate redirecting to `/auth`); the board itself is `_authenticated/index.tsx`, so there is no top-level `src/routes/index.tsx`.
+- Stage changes are recorded as `activities` rows of type `stage` by a database trigger (body `from>to`), not by client code.
